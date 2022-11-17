@@ -6,32 +6,28 @@ The overview/next steps/thoughts are included in the readme file inside each fil
 See ReadMe file in "01" folder.
 
 ## Part 2 Notes
-See See ReadMe file in "02" folder.
+See ReadMe file in "02" folder.
 
 ## Part 3 Notes
-See See ReadMe file in "02" folder.
+See ReadMe file in "03" folder.
 
 ## Part 4 Notes
-See See ReadMe file in "02" folder.
-
-The GIF demo is also included in each file.
+See ReadMe file in "04" folder.
 
 ## Part 5 Notes
-I have done part 5 before the lab is setted up on Friday. Thus, I have pictures and videos of traces on a physical oscilloscope. (Clarify) The code, pictures and video recording are included in the "05" folder. Since my team collaborate on this project, I will also include the team repo for further reference.
-
-My team is collaborating using the same repo: https://github.com/YuchenWang0303/Lab2b_part5-Yuchen-Wang-Worked-with-Katrina-Ji
+See ReadMe file in "05" folder.
 
 ## Part 6 Notes
-See See ReadMe file in "06" folder.
+See ReadMe file in "06" folder.
 
 ## Part 7 Notes
-See See ReadMe file in "07" folder.
+See ReadMe file in "07" folder.
 
 ## Part 8 Notes
-See See ReadMe file in "08" folder.
+See ReadMe file in "08" folder.
 
 ## Part 9 Notes
-See See ReadMe file in "09" folder.
+See ReadMe file in "09" folder.
 
 ## Part 10 Notes
-See See ReadMe file in "10" folder.
+See ReadMe file in "10" folder.
