@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 // PIO logic analyser example
 //
 // This program captures samples from a group of pins, at a fixed rate, once a
@@ -18,21 +24,10 @@
 // Some logic to analyse:
 #include "hardware/structs/pwm.h"
 
-// Added for QTPY 2040
-#include "ws2812.pio.h"
-#include "adafruit_qtpy_rp2040.h" 
-
-// Define the button PIN on QTPY 2040
-#define QTPY_BOOT_PIN 21
-#define QTPY_A0 29
-#define QTPY_A1 28
-#define QTPY_A2 27
-#define QTPY_A3 26
-
-const uint CAPTURE_PIN_BASE = 26; // Use A2, A3
+const uint CAPTURE_PIN_BASE = 22;
 const uint CAPTURE_PIN_COUNT = 2;
 const uint CAPTURE_N_SAMPLES = 96;
-const uint QTPY_BOOT = 21;
+const uint BOOT_PIN = 21;
 
 static inline uint bits_packed_per_word(uint pin_count) {
     // If the number of pins to be sampled divides the shift register size, we
@@ -88,7 +83,7 @@ void logic_analyser_arm(PIO pio, uint sm, uint dma_chan, uint32_t *capture_buf, 
         true                // Start immediately
     );
 
-    // pio_sm_exec(pio, sm, pio_encode_wait_gpio(trigger_level, trigger_pin));
+    //pio_sm_exec(pio, sm, pio_encode_wait_gpio(trigger_level, trigger_pin));
     pio_sm_set_enabled(pio, sm, true);
 }
 
@@ -115,24 +110,11 @@ void print_capture_buf(const uint32_t *buf, uint pin_base, uint pin_count, uint3
 
 int main() {
     stdio_init_all();
-    gpio_init(QTPY_BOOT_PIN);
-    gpio_set_dir(QTPY_BOOT_PIN, GPIO_IN);
-
-    gpio_init(QTPY_A0);
-    gpio_set_dir(QTPY_A0, GPIO_OUT);
-    gpio_init(QTPY_A1);
-    gpio_set_dir(QTPY_A1, GPIO_OUT);
-    gpio_init(QTPY_A2);
-    gpio_set_dir(QTPY_A2, GPIO_OUT);
-    gpio_init(QTPY_A3);
-    gpio_set_dir(QTPY_A3, GPIO_OUT);
-
-    while(stdio_usb_connected()!=true); // When usb is connected 
+    while(stdio_usb_connected()!=true);
     printf("PIO logic analyser example\n");
     
-    // Only start when the button is pressed.
-    while(gpio_get(QTPY_BOOT) != 0);
-    
+    //while(gpio_get(BOOT_PIN) != 0);
+ 
     // We're going to capture into a u32 buffer, for best DMA efficiency. Need
     // to be careful of rounding in case the number of pins being sampled
     // isn't a power of 2.
@@ -151,31 +133,12 @@ int main() {
     uint sm = 0;
     uint dma_chan = 0;
 
-    logic_analyser_init(pio, sm, CAPTURE_PIN_BASE, CAPTURE_PIN_COUNT, 1.f);
-
-    printf("Arming trigger\n");
-    logic_analyser_arm(pio, sm, dma_chan, capture_buf, buf_size_words, CAPTURE_PIN_BASE, true);
-
-    printf("Starting PWM example\n");
-    // PWM example: -----------------------------------------------------------
-    gpio_set_function(CAPTURE_PIN_BASE, GPIO_FUNC_PWM);
-    gpio_set_function(CAPTURE_PIN_BASE + 1, GPIO_FUNC_PWM);
-    // Topmost value of 3: count from 0 to 3 and then wrap, so period is 4 cycles
-    pwm_hw->slice[0].top = 3;
-    // Divide frequency by two to slow things down a little
-    pwm_hw->slice[0].div = 4 << PWM_CH0_DIV_INT_LSB;
-    // Set channel A to be high for 1 cycle each period (duty cycle 1/4) and
-    // channel B for 3 cycles (duty cycle 3/4)
-    pwm_hw->slice[0].cc =
-            (1 << PWM_CH0_CC_A_LSB) |
-            (3 << PWM_CH0_CC_B_LSB);
-    // Enable this PWM slice
-    pwm_hw->slice[0].csr = PWM_CH0_CSR_EN_BITS;
-    // ------------------------------------------------------------------------
-
-    // The logic analyser should have started capturing as soon as it saw the
-    // first transition. Wait until the last sample comes in from the DMA.
-    dma_channel_wait_for_finish_blocking(dma_chan);
-
+    logic_analyser_init(pio, sm, CAPTURE_PIN_BASE, CAPTURE_PIN_COUNT, 256.f);
+while(1){
+    if (gpio_get(BOOT_PIN) == 0){
+    logic_analyser_arm(pio, sm, dma_chan, capture_buf, buf_size_words, CAPTURE_PIN_BASE, false);
     print_capture_buf(capture_buf, CAPTURE_PIN_BASE, CAPTURE_PIN_COUNT, CAPTURE_N_SAMPLES);
+        }
+    }
 }
+
