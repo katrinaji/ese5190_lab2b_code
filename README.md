@@ -1,8 +1,8 @@
 # ese5190_lab2b_code 
 ## Note
-All labs are collaborative work with Yuchen Wang. We would also thank for all other teams that help us during this time.
+All labs are collaborative work with Yuchen Wang. 
 
-The overview/next steps/thoughts are included in the readme file inside each file.
+We would also thank for all other teams that help us during this time.
 
 ## Part 1 Notes
 See ReadMe file in "01" folder.
